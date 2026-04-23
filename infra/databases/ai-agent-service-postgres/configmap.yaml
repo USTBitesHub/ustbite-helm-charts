@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ustbite-ai-agent-service-postgres-config
+  namespace: ustbite-data
+  labels:
+    app: ustbite-ai-agent-service-postgres
+    component: database
+    service: ai-agent-service
+data:
+  POSTGRES_DB: ustbite_incidents_db
+  POSTGRES_PORT: "5432"
+  POSTGRES_HOST: ustbite-ai-agent-service-postgres

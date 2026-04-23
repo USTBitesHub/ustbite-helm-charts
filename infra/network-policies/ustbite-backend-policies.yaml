@@ -1,0 +1,186 @@
+# ============================================================
+# ustbite-backend Namespace Network Policies
+# All core microservices: user, restaurant, order, payment,
+# delivery, notification
+# ============================================================
+
+# Allow kgateway to reach all backend pods
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-kgateway-ingress
+  namespace: ustbite-backend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kgateway
+---
+# Allow Prometheus scraping of all backend /metrics endpoints
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-monitoring-ingress
+  namespace: ustbite-backend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8001
+        - port: 8002
+        - port: 8003
+        - port: 8004
+        - port: 8005
+        - port: 8006
+---
+# Allow ustbite-ops (ai-agent, log-aggregator, metrics-collector) to reach backend
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-ops-ingress
+  namespace: ustbite-backend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-ops
+---
+# Allow all backend services to egress to ustbite-data (postgres, redis, rabbitmq)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-data-egress
+  namespace: ustbite-backend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-data
+---
+# Allow backend DNS resolution
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-dns-egress
+  namespace: ustbite-backend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+---
+# Allow inter-backend communication (e.g., order-service → payment-service sync call)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-internal-egress
+  namespace: ustbite-backend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+---
+# Allow notification-service and payment-service external egress
+# (SendGrid email, Razorpay payment gateway)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-external-egress
+  namespace: ustbite-backend
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ustbite-notification-service
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - port: 443
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-payment-external-egress
+  namespace: ustbite-backend
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ustbite-payment-service
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - port: 443
+          protocol: TCP
+---
+# Allow backend to reach Keycloak for JWT validation (optional, if services validate tokens themselves)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-keycloak-egress
+  namespace: ustbite-backend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: keycloak
+      ports:
+        - port: 8080
+          protocol: TCP

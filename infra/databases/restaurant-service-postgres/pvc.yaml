@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ustbite-restaurant-service-postgres-pvc
+  namespace: ustbite-data
+  labels:
+    app: ustbite-restaurant-service-postgres
+    component: database
+    service: restaurant-service
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs-storage
+  resources:
+    requests:
+      storage: 1Gi

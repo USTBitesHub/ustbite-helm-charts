@@ -1,0 +1,29 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ustbite-gateway
+  namespace: kgateway
+spec:
+  # Check your installed gateway class:
+  # kubectl get gatewayclass
+  # Use "kgateway" for kgateway.io (formerly Gloo)
+  # Use "envoy-gateway" for Envoy Gateway project
+  gatewayClassName: kgateway
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https
+      port: 443
+      protocol: HTTPS
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: ustbite-tls-secret
+            namespace: kgateway

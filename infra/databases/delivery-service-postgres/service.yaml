@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ustbite-delivery-service-postgres
+  namespace: ustbite-data
+  labels:
+    app: ustbite-delivery-service-postgres
+    component: database
+    service: delivery-service
+spec:
+  type: ClusterIP
+  selector:
+    app: ustbite-delivery-service-postgres
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+      protocol: TCP

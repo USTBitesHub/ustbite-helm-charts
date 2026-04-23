@@ -1,0 +1,195 @@
+# ============================================================
+# ustbite-data Namespace Network Policies
+# Contains: per-service Postgres StatefulSets, Redis, RabbitMQ
+# Only backend and ops may connect — no direct external access
+# ============================================================
+
+# Allow only ustbite-backend pods to reach postgres/redis/rabbitmq
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-allow-backend-ingress
+  namespace: ustbite-data
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+---
+# Allow ustbite-ops (ai-agent has its own postgres in data ns) to reach its DB
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-allow-ops-ingress
+  namespace: ustbite-data
+spec:
+  podSelector:
+    matchLabels:
+      app: ustbite-ai-agent-service-postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-ops
+      ports:
+        - port: 5432
+---
+# Allow data pods to resolve DNS (needed by postgres, redis, rabbitmq for replication/startup)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-allow-dns-egress
+  namespace: ustbite-data
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+---
+# Allow intra-data communication (e.g., postgres primary→replica, rabbitmq cluster)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-allow-internal
+  namespace: ustbite-data
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-data
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-data
+---
+# Per-service DB isolation: only user-service can reach user postgres
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-allow-only-user-service-to-user-postgres
+  namespace: ustbite-data
+spec:
+  podSelector:
+    matchLabels:
+      app: ustbite-user-service-postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ustbite-user-service
+      ports:
+        - port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-allow-only-restaurant-service-to-postgres
+  namespace: ustbite-data
+spec:
+  podSelector:
+    matchLabels:
+      app: ustbite-restaurant-service-postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ustbite-restaurant-service
+      ports:
+        - port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-allow-only-order-service-to-postgres
+  namespace: ustbite-data
+spec:
+  podSelector:
+    matchLabels:
+      app: ustbite-order-service-postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ustbite-order-service
+      ports:
+        - port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-allow-only-payment-service-to-postgres
+  namespace: ustbite-data
+spec:
+  podSelector:
+    matchLabels:
+      app: ustbite-payment-service-postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ustbite-payment-service
+      ports:
+        - port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-allow-only-delivery-service-to-postgres
+  namespace: ustbite-data
+spec:
+  podSelector:
+    matchLabels:
+      app: ustbite-delivery-service-postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ustbite-delivery-service
+      ports:
+        - port: 5432

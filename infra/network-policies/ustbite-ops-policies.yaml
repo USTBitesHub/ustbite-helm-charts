@@ -1,0 +1,118 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ustbite-ops-egress
+  namespace: ustbite-ops
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+---
+# DNS egress for all ustbite-ops pods
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ustbite-ops-allow-dns-egress
+  namespace: ustbite-ops
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ustbite-ops-ai-agent-ingress
+  namespace: ustbite-ops
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ustbite-ai-agent-service
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8009
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ustbite-ops-ai-agent-kube-api
+  namespace: ustbite-ops
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ustbite-ai-agent-service
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 443
+          protocol: TCP
+        - port: 6443
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ustbite-ops-monitoring-ingress
+  namespace: ustbite-ops
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kgateway
+---
+# ai-agent-service egress to its postgres (now in ustbite-data namespace)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ai-agent-service-to-its-db
+  namespace: ustbite-ops
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ustbite-ai-agent-service
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-data
+          podSelector:
+            matchLabels:
+              app: ustbite-ai-agent-service-postgres
+      ports:
+        - port: 5432

@@ -1,0 +1,59 @@
+# ============================================================
+# DEV / STAGING ApplicationSet
+# Watches ustbite-helm-charts@develop and deploys using
+# values.dev.yaml overlay. No prod-gate required.
+# ============================================================
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ustbite-dev
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - service: frontend
+            namespace: ustbite-frontend
+          - service: user-service
+            namespace: ustbite-backend
+          - service: restaurant-service
+            namespace: ustbite-backend
+          - service: order-service
+            namespace: ustbite-backend
+          - service: payment-service
+            namespace: ustbite-backend
+          - service: delivery-service
+            namespace: ustbite-backend
+          - service: notification-service
+            namespace: ustbite-backend
+          - service: metrics-collector
+            namespace: ustbite-ops
+          - service: log-aggregator
+            namespace: ustbite-ops
+          - service: ai-agent-service
+            namespace: ustbite-ops
+
+  template:
+    metadata:
+      name: "ustbite-{{service}}-dev"
+      namespace: argocd
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/USTBitesHub/ustbite-helm-charts.git
+          targetRevision: develop
+          path: "charts/{{service}}"
+          helm:
+            valueFiles:
+              - values.dev.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+      revisionHistoryLimit: 2

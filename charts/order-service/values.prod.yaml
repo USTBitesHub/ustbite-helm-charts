@@ -1,0 +1,48 @@
+replicaCount: 1
+image:
+  repository: ustbiteshub/ustbite-order-service
+  pullPolicy: IfNotPresent
+  tag: "latest"
+service:
+  type: ClusterIP
+  port: 8003
+namespace: ustbite-backend
+env:
+  SERVICE_NAME: ustbite-order-service
+  SERVICE_PORT: "8003"
+  LOG_LEVEL: "INFO"
+secrets:
+  DATABASE_URL: ""
+  REDIS_URL: ""
+  RABBITMQ_URL: ""
+  SECRET_KEY: ""
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+serviceAccount:
+  create: true
+  name: ""
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5

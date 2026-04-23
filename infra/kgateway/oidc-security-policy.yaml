@@ -1,0 +1,40 @@
+############################################################
+# OIDC Security Policy
+# Enforces Keycloak OIDC authentication on all /api/* routes.
+# Public routes (/ → frontend, /auth → keycloak) are NOT
+# targeted by this policy and remain unauthenticated.
+#
+# Apply AFTER:
+#   1. Keycloak is running and realm 'ustbite' exists
+#   2. kgateway-client is created in Keycloak
+#   3. keycloak-oidc-secret is created in kgateway namespace
+############################################################
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: ustbite-oidc-policy
+  namespace: kgateway
+spec:
+  # Targets ONLY the protected API routes, not public or argocd/keycloak routes
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: ustbite-api-routes
+    namespace: kgateway
+  oidc:
+    provider:
+      # Full FQDN — required since keycloak is in a different namespace
+      issuer: "http://keycloak-svc.keycloak.svc.cluster.local:8080/realms/ustbite"
+    clientID: "kgateway-client"
+    clientSecret:
+      name: keycloak-oidc-secret
+      namespace: kgateway
+    # Update <your-node-ip> with your actual cluster IP or domain
+    # For local testing: http://<node-ip>/callback
+    # For production: https://api.ustbite.yourdomain.com/callback
+    redirectURL: "http://<your-node-ip>/callback"
+    logoutPath: "/logout"
+    # Forward the validated JWT to backend services in Authorization header
+    forwardAccessToken: true
+    # Extract user info and forward as headers
+    defaultTokenTTL: "60m"

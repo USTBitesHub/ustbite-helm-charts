@@ -1,0 +1,87 @@
+# ============================================================
+# PRODUCTION ApplicationSet
+# Watches ustbite-helm-charts@main and deploys each service
+# chart using values.prod.yaml overlay.
+# Applies to: ustbite-frontend, ustbite-backend, ustbite-ops
+# ============================================================
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ustbite-prod
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          # ─── Frontend ───────────────────────────────────────
+          - service: frontend
+            namespace: ustbite-frontend
+            port: "80"
+
+          # ─── Backend ────────────────────────────────────────
+          - service: user-service
+            namespace: ustbite-backend
+            port: "8001"
+          - service: restaurant-service
+            namespace: ustbite-backend
+            port: "8002"
+          - service: order-service
+            namespace: ustbite-backend
+            port: "8003"
+          - service: payment-service
+            namespace: ustbite-backend
+            port: "8004"
+          - service: delivery-service
+            namespace: ustbite-backend
+            port: "8005"
+          - service: notification-service
+            namespace: ustbite-backend
+            port: "8006"
+
+          # ─── Ops ────────────────────────────────────────────
+          - service: metrics-collector
+            namespace: ustbite-ops
+            port: "8007"
+          - service: log-aggregator
+            namespace: ustbite-ops
+            port: "8008"
+          - service: ai-agent-service
+            namespace: ustbite-ops
+            port: "8009"
+
+  template:
+    metadata:
+      name: "ustbite-{{service}}-prod"
+      namespace: argocd
+      annotations:
+        notifications.argoproj.io/subscribe.on-sync-failed.slack: ustbite-alerts
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/USTBitesHub/ustbite-helm-charts.git
+          targetRevision: main
+          path: "charts/{{service}}"
+          helm:
+            valueFiles:
+              - values.prod.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 3
+          backoff:
+            duration: 10s
+            maxDuration: 3m
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+      revisionHistoryLimit: 3
+      ignoreDifferences:
+        - group: apps
+          kind: Deployment
+          jsonPointers:
+            - /spec/replicas   # allow HPA to manage replicas

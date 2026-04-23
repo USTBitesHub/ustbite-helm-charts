@@ -1,0 +1,147 @@
+# ============================================================
+# KGateway Namespace Network Policies (Envoy Proxy)
+# Envoy-based KGateway listens on 80/443 externally,
+# forwards to ustbite-frontend and ustbite-backend,
+# and proxies ArgoCD UI + Keycloak login UI.
+# ============================================================
+
+# Allow external internet traffic into KGateway Envoy listeners
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kgateway-allow-external-ingress
+  namespace: kgateway
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - port: 80
+          protocol: TCP
+        - port: 443
+          protocol: TCP
+---
+# Allow Envoy proxy admin port (9901) within kgateway namespace only
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kgateway-allow-envoy-admin-internal
+  namespace: kgateway
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kgateway
+      ports:
+        - port: 9901
+          protocol: TCP
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kgateway
+      ports:
+        - port: 9901
+          protocol: TCP
+---
+# Allow KGateway to forward traffic to ustbite-frontend
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kgateway-allow-egress-to-frontend
+  namespace: kgateway
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-frontend
+---
+# Allow KGateway to forward API traffic to ustbite-backend services
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kgateway-allow-egress-to-backend
+  namespace: kgateway
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ustbite-backend
+---
+# Allow KGateway to proxy ArgoCD UI
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kgateway-allow-egress-to-argocd
+  namespace: kgateway
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: argocd
+      ports:
+        - port: 8080
+          protocol: TCP
+        - port: 443
+          protocol: TCP
+---
+# Allow KGateway to reach Keycloak for OAuth token validation / login redirect
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kgateway-allow-egress-to-keycloak
+  namespace: kgateway
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: keycloak
+      ports:
+        - port: 8080
+          protocol: TCP
+---
+# Allow KGateway DNS resolution
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kgateway-allow-dns-egress
+  namespace: kgateway
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ustbite-order-service-postgres-pvc
+  namespace: ustbite-data
+  labels:
+    app: ustbite-order-service-postgres
+    component: database
+    service: order-service
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs-storage
+  resources:
+    requests:
+      storage: 1Gi

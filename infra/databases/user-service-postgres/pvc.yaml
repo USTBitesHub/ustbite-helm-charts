@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ustbite-user-service-postgres-pvc
+  namespace: ustbite-data
+  labels:
+    app: ustbite-user-service-postgres
+    component: database
+    service: user-service
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs-storage
+  resources:
+    requests:
+      storage: 1Gi

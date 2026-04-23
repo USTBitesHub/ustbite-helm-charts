@@ -1,0 +1,152 @@
+############################################################
+# USTBite HTTPRoutes
+# IMPORTANT: backendRefs namespaces MUST match the new
+# namespace structure:
+#   frontend → ustbite-frontend
+#   backend services → ustbite-backend
+#   ai-agent → ustbite-ops
+############################################################
+
+# ─── Public Routes (no OIDC auth required) ─────────────────
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ustbite-public-routes
+  namespace: kgateway
+spec:
+  parentRefs:
+    - name: ustbite-gateway
+      namespace: kgateway
+  rules:
+    # Frontend SPA — all unmatched routes serve React app
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ustbite-frontend
+          namespace: ustbite-frontend
+          port: 80
+---
+# ─── Protected API Routes (OIDC auth enforced via SecurityPolicy) ─
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ustbite-api-routes
+  namespace: kgateway
+spec:
+  parentRefs:
+    - name: ustbite-gateway
+      namespace: kgateway
+  # If you have a real domain, add hostnames here. For local/node IP
+  # testing, omit the hostnames field entirely (default: match all).
+  rules:
+    # User service
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/users
+      backendRefs:
+        - name: ustbite-user-service
+          namespace: ustbite-backend
+          port: 8001
+
+    # Restaurant service
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/restaurants
+      backendRefs:
+        - name: ustbite-restaurant-service
+          namespace: ustbite-backend
+          port: 8002
+
+    # Order service
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/orders
+      backendRefs:
+        - name: ustbite-order-service
+          namespace: ustbite-backend
+          port: 8003
+
+    # Payment service
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/payments
+      backendRefs:
+        - name: ustbite-payment-service
+          namespace: ustbite-backend
+          port: 8004
+
+    # Delivery service
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/delivery
+      backendRefs:
+        - name: ustbite-delivery-service
+          namespace: ustbite-backend
+          port: 8005
+
+    # Notification service (internal — no direct API exposure, but useful for admin)
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/notifications
+      backendRefs:
+        - name: ustbite-notification-service
+          namespace: ustbite-backend
+          port: 8006
+
+    # AI Agent service (ops namespace)
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/agent
+      backendRefs:
+        - name: ustbite-ai-agent-service
+          namespace: ustbite-ops
+          port: 8009
+---
+# ─── ArgoCD UI Route (admin access via gateway) ─────────────
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ustbite-argocd-route
+  namespace: kgateway
+spec:
+  parentRefs:
+    - name: ustbite-gateway
+      namespace: kgateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /argocd
+      backendRefs:
+        - name: argocd-server
+          namespace: argocd
+          port: 8080
+---
+# ─── Keycloak Admin/Auth UI Route ───────────────────────────
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ustbite-keycloak-route
+  namespace: kgateway
+spec:
+  parentRefs:
+    - name: ustbite-gateway
+      namespace: kgateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /auth
+      backendRefs:
+        - name: keycloak-svc
+          namespace: keycloak
+          port: 8080

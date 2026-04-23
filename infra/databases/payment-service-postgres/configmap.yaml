@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ustbite-payment-service-postgres-config
+  namespace: ustbite-data
+  labels:
+    app: ustbite-payment-service-postgres
+    component: database
+    service: payment-service
+data:
+  POSTGRES_DB: ustbite_payments_db
+  POSTGRES_PORT: "5432"
+  POSTGRES_HOST: ustbite-payment-service-postgres

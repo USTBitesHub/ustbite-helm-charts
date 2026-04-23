@@ -1,0 +1,60 @@
+# ============================================================
+# ustbite-frontend Namespace Network Policies
+# Frontend pods (React/Vite served via Nginx container)
+# ============================================================
+
+# Allow kgateway to reach the frontend pods
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-allow-kgateway-ingress
+  namespace: ustbite-frontend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kgateway
+---
+# Allow Prometheus to scrape frontend /metrics
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-allow-monitoring-ingress
+  namespace: ustbite-frontend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 80
+          protocol: TCP
+---
+# Allow frontend to resolve DNS
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-allow-dns-egress
+  namespace: ustbite-frontend
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
