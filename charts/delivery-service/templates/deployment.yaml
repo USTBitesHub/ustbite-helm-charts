@@ -19,7 +19,11 @@ spec:
       initContainers:
         - name: db-migrate
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          workingDir: /app
           command: ["alembic", "upgrade", "head"]
+          env:
+            - name: PYTHONPATH
+              value: /app
           envFrom:
             - configMapRef:
                 name: {{ include "chart.fullname" . }}-config
