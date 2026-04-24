@@ -153,3 +153,25 @@ spec:
           protocol: UDP
         - port: 53
           protocol: TCP
+---
+# *** CRITICAL *** Allow Envoy to reach the kgateway xDS control plane
+# Envoy connects to kgateway.kgateway-system.svc.cluster.local:9977 (gRPC/ADS)
+# to receive listener + cluster configuration.
+# Without this, default-deny-all blocks xDS → Envoy has NO listeners → port 80 never opens.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kgateway-allow-egress-to-xds-controlplane
+  namespace: kgateway
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kgateway-system
+      ports:
+        - port: 9977    # kgateway xDS / ADS gRPC server
+          protocol: TCP
