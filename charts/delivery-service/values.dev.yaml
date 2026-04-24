@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-delivery-service
   pullPolicy: IfNotPresent
-  tag: develop-f95c0033
+  tag: develop-8264b930
 service:
   type: ClusterIP
   port: 8005
