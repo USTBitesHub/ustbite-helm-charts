@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-frontend
   pullPolicy: IfNotPresent
-  tag: develop-1e6d4fe5
+  tag: develop-6567e2ba
 service:
   type: ClusterIP
   port: 80
