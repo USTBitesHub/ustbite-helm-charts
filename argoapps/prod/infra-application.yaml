@@ -24,3 +24,15 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
   revisionHistoryLimit: 2
+  # Ignore auto-added default fields in Gateway API resources
+  # Kubernetes populates group/kind/weight after every apply, causing false OutOfSync
+  ignoreDifferences:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      jqPathExpressions:
+        - .spec.rules[].backendRefs[].group
+        - .spec.rules[].backendRefs[].kind
+        - .spec.rules[].backendRefs[].weight
+        - .spec.parentRefs[].group
+        - .spec.parentRefs[].kind
+
