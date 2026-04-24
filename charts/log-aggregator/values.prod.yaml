@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-log-aggregator
   pullPolicy: IfNotPresent
-  tag: log-aggregator-v0.0.1
+  tag: log-aggregator-v0.0.2
 service:
   type: ClusterIP
   port: 8008
