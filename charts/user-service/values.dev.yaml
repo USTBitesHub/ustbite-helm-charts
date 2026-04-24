@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-user-service
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: develop-feda23cc
 service:
   type: ClusterIP
   port: 8001

@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-order-service
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: develop-06240c44
 service:
   type: ClusterIP
   port: 8003
