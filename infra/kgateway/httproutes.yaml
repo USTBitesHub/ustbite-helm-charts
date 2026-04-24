@@ -47,7 +47,7 @@ spec:
             type: PathPrefix
             value: /api/users
       backendRefs:
-        - name: ustbite-user-service
+        - name: ustbite-user-service-prod
           namespace: ustbite-backend
           port: 8001
 
@@ -57,7 +57,7 @@ spec:
             type: PathPrefix
             value: /api/restaurants
       backendRefs:
-        - name: ustbite-restaurant-service
+        - name: ustbite-restaurant-service-prod
           namespace: ustbite-backend
           port: 8002
 
@@ -67,7 +67,7 @@ spec:
             type: PathPrefix
             value: /api/orders
       backendRefs:
-        - name: ustbite-order-service
+        - name: ustbite-order-service-prod
           namespace: ustbite-backend
           port: 8003
 
@@ -77,7 +77,7 @@ spec:
             type: PathPrefix
             value: /api/payments
       backendRefs:
-        - name: ustbite-payment-service
+        - name: ustbite-payment-service-prod
           namespace: ustbite-backend
           port: 8004
 
@@ -87,7 +87,7 @@ spec:
             type: PathPrefix
             value: /api/delivery
       backendRefs:
-        - name: ustbite-delivery-service
+        - name: ustbite-delivery-service-prod
           namespace: ustbite-backend
           port: 8005
 
@@ -97,7 +97,7 @@ spec:
             type: PathPrefix
             value: /api/notifications
       backendRefs:
-        - name: ustbite-notification-service
+        - name: ustbite-notification-service-prod
           namespace: ustbite-backend
           port: 8006
 
