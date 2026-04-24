@@ -5,7 +5,7 @@ image:
   tag: develop-190ec9bf
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
 namespace: ustbite-frontend
 env:
   SERVICE_NAME: ustbite-frontend
