@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-notification-service
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: develop-ebba990b
 service:
   type: ClusterIP
   port: 8006
