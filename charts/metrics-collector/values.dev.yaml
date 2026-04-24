@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-metrics-collector
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: develop-6319b7b3
 service:
   type: ClusterIP
   port: 8007
