@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-restaurant-service
   pullPolicy: IfNotPresent
-  tag: restaurant-service-v0.0.1
+  tag: restaurant-service-v0.0.2
 service:
   type: ClusterIP
   port: 8002
