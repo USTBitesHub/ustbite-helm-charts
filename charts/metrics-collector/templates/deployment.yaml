@@ -16,15 +16,6 @@ spec:
         {{- include "chart.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "chart.serviceAccountName" . }}
-      # initContainers:
-      #   - name: db-migrate
-      #     image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-      #     command: ["alembic", "upgrade", "head"]
-      #     envFrom:
-      #       - configMapRef:
-      #           name: {{ include "chart.fullname" . }}-config
-      #       - secretRef:
-      #           name: {{ include "chart.fullname" . }}-secret
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

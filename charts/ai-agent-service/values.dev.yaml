@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-ai-agent-service
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: develop-e0d1ffd7
 service:
   type: ClusterIP
   port: 8009
