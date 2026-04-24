@@ -4,10 +4,6 @@ metadata:
   name: ustbite-gateway
   namespace: kgateway
 spec:
-  # Check your installed gateway class:
-  # kubectl get gatewayclass
-  # Use "kgateway" for kgateway.io (formerly Gloo)
-  # Use "envoy-gateway" for Envoy Gateway project
   gatewayClassName: kgateway
   listeners:
     - name: http
@@ -16,14 +12,5 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    - name: https
-      port: 443
-      protocol: HTTPS
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: ustbite-tls-secret
-            namespace: kgateway
+  # HTTPS listener disabled until TLS cert + OIDC are configured together.
+  # Re-enable with cert-manager + ustbite-tls-secret when OIDC is set up.
