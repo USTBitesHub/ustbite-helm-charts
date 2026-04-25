@@ -31,16 +31,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ustbite-ops
-  labels:
-    kubernetes.io/metadata.name: ustbite-ops
-    environment: production
-    team: ustbite
-    tier: ops
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: monitoring
   labels:
     kubernetes.io/metadata.name: monitoring
@@ -51,13 +41,6 @@ metadata:
   name: argocd
   labels:
     kubernetes.io/metadata.name: argocd
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: keycloak
-  labels:
-    kubernetes.io/metadata.name: keycloak
 ---
 apiVersion: v1
 kind: Namespace

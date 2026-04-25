@@ -1,5 +1,5 @@
 # Default-deny-all applied ONLY to app namespaces.
-# Infrastructure namespaces (kgateway, argocd, keycloak, monitoring) are intentionally
+# Infrastructure namespaces (kgateway, argocd, monitoring) are intentionally
 # left open — applying default-deny to them causes cascading allow-rule hell
 # for internal plumbing (xDS gRPC, Dex OIDC, Prometheus scraping, etc.)
 apiVersion: networking.k8s.io/v1

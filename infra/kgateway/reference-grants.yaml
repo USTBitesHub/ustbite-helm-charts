@@ -36,35 +36,7 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
   name: allow-kgateway-httproutes
-  namespace: ustbite-ops
-spec:
-  from:
-    - group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      namespace: kgateway
-  to:
-    - group: ""
-      kind: Service
----
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: ReferenceGrant
-metadata:
-  name: allow-kgateway-httproutes
   namespace: argocd
-spec:
-  from:
-    - group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      namespace: kgateway
-  to:
-    - group: ""
-      kind: Service
----
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: ReferenceGrant
-metadata:
-  name: allow-kgateway-httproutes
-  namespace: keycloak
 spec:
   from:
     - group: gateway.networking.k8s.io

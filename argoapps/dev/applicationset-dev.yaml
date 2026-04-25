@@ -26,12 +26,8 @@ spec:
             namespace: ustbite-backend
           - service: notification-service
             namespace: ustbite-backend
-          - service: metrics-collector
-            namespace: ustbite-ops
-          - service: log-aggregator
-            namespace: ustbite-ops
-          - service: ai-agent-service
-            namespace: ustbite-ops
+          - service: cart-service
+            namespace: ustbite-backend
 
   template:
     metadata:
