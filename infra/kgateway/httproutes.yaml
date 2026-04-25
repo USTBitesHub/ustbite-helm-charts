@@ -142,7 +142,7 @@ spec:
           namespace: ustbite-backend
           port: 8005
 
-    # Cart endpoints → cart-service (Redis-backed, no DB)
+    # Cart endpoints → cart-service (PostgreSQL-backed, persists across sessions)
     - matches:
         - path:
             type: PathPrefix
