@@ -11,6 +11,7 @@ env:
   SERVICE_NAME: ustbite-notification-service
   SERVICE_PORT: "8006"
   LOG_LEVEL: "INFO"
+  FRONTEND_URL: "http://3.239.98.194"
 secrets:
   REDIS_URL: ""
   RABBITMQ_URL: ""

@@ -7,3 +7,4 @@ data:
   SERVICE_NAME: {{ .Values.env.SERVICE_NAME }}
   SERVICE_PORT: {{ .Values.env.SERVICE_PORT | quote }}
   LOG_LEVEL: {{ .Values.env.LOG_LEVEL }}
+  FRONTEND_URL: {{ .Values.env.FRONTEND_URL | quote }}

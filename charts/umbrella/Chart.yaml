@@ -23,15 +23,6 @@ dependencies:
   - name: ustbite-notification-service
     version: 0.1.0
     repository: file://../notification-service
-  - name: ustbite-metrics-collector
-    version: 0.1.0
-    repository: file://../metrics-collector
-  - name: ustbite-log-aggregator
-    version: 0.1.0
-    repository: file://../log-aggregator
-  - name: ustbite-ai-agent-service
-    version: 0.1.0
-    repository: file://../ai-agent-service
   - name: ustbite-frontend
     version: 0.1.0
     repository: file://../frontend

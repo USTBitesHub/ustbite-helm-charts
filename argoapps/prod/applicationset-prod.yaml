@@ -41,17 +41,6 @@ spec:
             namespace: ustbite-backend
             port: "8010"
 
-          # ─── Ops ────────────────────────────────────────────
-          - service: metrics-collector
-            namespace: ustbite-ops
-            port: "8007"
-          - service: log-aggregator
-            namespace: ustbite-ops
-            port: "8008"
-          - service: ai-agent-service
-            namespace: ustbite-ops
-            port: "8009"
-
   template:
     metadata:
       name: "ustbite-{{service}}-prod"
