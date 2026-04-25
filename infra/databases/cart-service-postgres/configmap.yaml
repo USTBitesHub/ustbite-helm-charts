@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ustbite-cart-service-postgres-config
+  namespace: ustbite-data
+data:
+  POSTGRES_DB: ustbite_cart_db
+  POSTGRES_HOST: ustbite-cart-service-postgres

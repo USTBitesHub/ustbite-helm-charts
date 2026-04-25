@@ -142,6 +142,22 @@ spec:
           namespace: ustbite-backend
           port: 8005
 
+    # Cart endpoints → cart-service (Redis-backed, no DB)
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/cart
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /cart
+      backendRefs:
+        - name: ustbite-cart-service-prod
+          namespace: ustbite-backend
+          port: 8010
+
     # AI Agent endpoints → ai-agent (ustbite-ops namespace)
     - matches:
         - path:

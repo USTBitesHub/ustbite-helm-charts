@@ -37,6 +37,9 @@ spec:
           - service: notification-service
             namespace: ustbite-backend
             port: "8006"
+          - service: cart-service
+            namespace: ustbite-backend
+            port: "8010"
 
           # ─── Ops ────────────────────────────────────────────
           - service: metrics-collector

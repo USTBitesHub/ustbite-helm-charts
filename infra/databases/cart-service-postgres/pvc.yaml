@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ustbite-cart-service-postgres-pvc
+  namespace: ustbite-data
+  labels:
+    app: ustbite-cart-service-postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

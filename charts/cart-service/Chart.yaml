@@ -1,0 +1,6 @@
+apiVersion: v2
+name: cart-service
+description: USTBite Cart Service — Redis-backed cart using JWT auth
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
