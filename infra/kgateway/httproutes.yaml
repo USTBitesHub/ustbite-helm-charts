@@ -154,7 +154,7 @@ spec:
               type: ReplacePrefixMatch
               replacePrefixMatch: /cart
       backendRefs:
-        - name: ustbite-cart-service-prod
+        - name: cart-service-prod
           namespace: ustbite-backend
           port: 8010
 
