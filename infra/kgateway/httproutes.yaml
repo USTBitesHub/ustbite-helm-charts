@@ -1,13 +1,21 @@
 ############################################################
 # USTBite HTTPRoutes
-# IMPORTANT: backendRefs namespaces MUST match the new
-# namespace structure:
-#   frontend → ustbite-frontend
-#   backend services → ustbite-backend
-#   ai-agent → ustbite-ops
+# URL architecture:
+#   Browser → haproxy → kgateway → (strip /api prefix) → backend
+#
+#   /                → ustbite-frontend  (React SPA)
+#   /api/auth        → user-service:8001  rewrite → /auth
+#   /api/users       → user-service:8001  rewrite → /users
+#   /api/restaurants → restaurant-service:8002  rewrite → /restaurants
+#   /api/orders      → order-service:8003  rewrite → /orders
+#   /api/payments    → payment-service:8004  rewrite → /payments
+#   /api/delivery    → delivery-service:8005  rewrite → /delivery
+#   /api/agent       → ai-agent:8009  rewrite → /agent
+#   /argocd          → argocd-server:80
+#   /keycloak        → keycloak-svc:8080  (admin UI only)
 ############################################################
 
-# ─── Public Routes (no OIDC auth required) ─────────────────
+# ─── Frontend SPA (catch-all, must be last / least specific) ─
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -18,7 +26,6 @@ spec:
     - name: ustbite-gateway
       namespace: kgateway
   rules:
-    # Frontend SPA — all unmatched routes serve React app
     - matches:
         - path:
             type: PathPrefix
@@ -28,7 +35,7 @@ spec:
           namespace: ustbite-frontend
           port: 8080
 ---
-# ─── Protected API Routes (OIDC auth enforced via SecurityPolicy) ─
+# ─── API Routes — all strip /api prefix before forwarding ────
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -38,80 +45,120 @@ spec:
   parentRefs:
     - name: ustbite-gateway
       namespace: kgateway
-  # If you have a real domain, add hostnames here. For local/node IP
-  # testing, omit the hostnames field entirely (default: match all).
   rules:
-    # User service
+    # Auth endpoints (login, register, logout) → user-service
     - matches:
         - path:
             type: PathPrefix
-            value: /api/users
+            value: /api/auth
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /auth
       backendRefs:
         - name: ustbite-user-service-prod
           namespace: ustbite-backend
           port: 8001
 
-    # Restaurant service
+    # User profile endpoints → user-service
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/users
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /users
+      backendRefs:
+        - name: ustbite-user-service-prod
+          namespace: ustbite-backend
+          port: 8001
+
+    # Restaurant endpoints → restaurant-service
     - matches:
         - path:
             type: PathPrefix
             value: /api/restaurants
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /restaurants
       backendRefs:
         - name: ustbite-restaurant-service-prod
           namespace: ustbite-backend
           port: 8002
 
-    # Order service
+    # Order endpoints → order-service
     - matches:
         - path:
             type: PathPrefix
             value: /api/orders
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /orders
       backendRefs:
         - name: ustbite-order-service-prod
           namespace: ustbite-backend
           port: 8003
 
-    # Payment service
+    # Payment endpoints → payment-service
     - matches:
         - path:
             type: PathPrefix
             value: /api/payments
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /payments
       backendRefs:
         - name: ustbite-payment-service-prod
           namespace: ustbite-backend
           port: 8004
 
-    # Delivery service
+    # Delivery endpoints → delivery-service
     - matches:
         - path:
             type: PathPrefix
             value: /api/delivery
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /delivery
       backendRefs:
         - name: ustbite-delivery-service-prod
           namespace: ustbite-backend
           port: 8005
 
-    # Notification service (internal — no direct API exposure, but useful for admin)
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /api/notifications
-      backendRefs:
-        - name: ustbite-notification-service-prod
-          namespace: ustbite-backend
-          port: 8006
-
-    # AI Agent service (ops namespace)
+    # AI Agent endpoints → ai-agent (ustbite-ops namespace)
     - matches:
         - path:
             type: PathPrefix
             value: /api/agent
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /agent
       backendRefs:
         - name: ustbite-ai-agent-service-prod
           namespace: ustbite-ops
           port: 8009
 ---
-# ─── ArgoCD UI Route (admin access via gateway) ─────────────
+# ─── ArgoCD UI (admin access via gateway) ─────────────────────
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -131,7 +178,7 @@ spec:
           namespace: argocd
           port: 80
 ---
-# ─── Keycloak Admin/Auth UI Route ───────────────────────────
+# ─── Keycloak Admin UI (renamed from /auth to /keycloak to avoid conflict) ──
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -145,7 +192,13 @@ spec:
     - matches:
         - path:
             type: PathPrefix
-            value: /auth
+            value: /keycloak
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
       backendRefs:
         - name: keycloak-svc
           namespace: keycloak
