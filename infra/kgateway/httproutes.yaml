@@ -12,7 +12,6 @@
 #   /api/delivery    → delivery-service:8005  rewrite → /delivery
 #   /api/agent       → ai-agent:8009  rewrite → /agent
 #   /argocd          → argocd-server:80
-#   /keycloak        → keycloak-svc:8080  (admin UI only)
 ############################################################
 
 # ─── Frontend SPA (catch-all, must be last / least specific) ─
@@ -193,29 +192,3 @@ spec:
         - name: argocd-server
           namespace: argocd
           port: 80
----
-# ─── Keycloak Admin UI (renamed from /auth to /keycloak to avoid conflict) ──
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: ustbite-keycloak-route
-  namespace: kgateway
-spec:
-  parentRefs:
-    - name: ustbite-gateway
-      namespace: kgateway
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /keycloak
-      filters:
-        - type: URLRewrite
-          urlRewrite:
-            path:
-              type: ReplacePrefixMatch
-              replacePrefixMatch: /
-      backendRefs:
-        - name: keycloak-svc
-          namespace: keycloak
-          port: 8080
