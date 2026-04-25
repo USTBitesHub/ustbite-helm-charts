@@ -10,7 +10,6 @@
 #   /api/orders      → order-service:8003  rewrite → /orders
 #   /api/payments    → payment-service:8004  rewrite → /payments
 #   /api/delivery    → delivery-service:8005  rewrite → /delivery
-#   /api/agent       → ai-agent:8009  rewrite → /agent
 #   /argocd          → argocd-server:80
 ############################################################
 
@@ -157,21 +156,6 @@ spec:
           namespace: ustbite-backend
           port: 8010
 
-    # AI Agent endpoints → ai-agent (ustbite-ops namespace)
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /api/agent
-      filters:
-        - type: URLRewrite
-          urlRewrite:
-            path:
-              type: ReplacePrefixMatch
-              replacePrefixMatch: /agent
-      backendRefs:
-        - name: ustbite-ai-agent-service-prod
-          namespace: ustbite-ops
-          port: 8009
 ---
 # ─── ArgoCD UI (admin access via gateway) ─────────────────────
 apiVersion: gateway.networking.k8s.io/v1
