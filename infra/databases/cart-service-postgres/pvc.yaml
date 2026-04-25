@@ -5,9 +5,12 @@ metadata:
   namespace: ustbite-data
   labels:
     app: ustbite-cart-service-postgres
+    component: database
+    service: cart-service
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: nfs
   resources:
     requests:
       storage: 1Gi
