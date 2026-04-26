@@ -12,11 +12,11 @@ env:
   SERVICE_PORT: "8009"
   LOG_LEVEL: "DEBUG"
   OLLAMA_MODEL: "qwen2.5:3b"
+  OLLAMA_HOST: "http://54.85.49.94:11434"
   CART_SERVICE_URL: "http://ustbite-cart-service-dev:8010"
   ORDER_SERVICE_URL: "http://ustbite-order-service-dev:8003"
   RESTAURANT_SERVICE_URL: "http://ustbite-restaurant-service-dev:8002"
-secrets:
-  OLLAMA_HOST: ""
+secrets: {}
 resources:
   requests:
     cpu: 100m
