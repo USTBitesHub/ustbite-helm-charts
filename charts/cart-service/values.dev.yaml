@@ -1,3 +1,4 @@
+suffix: dev
 replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-cart-service
