@@ -3,7 +3,7 @@
 {{- end }}
 
 {{- define "chart.fullname" -}}
-{{- printf "%s-%s" (include "chart.name" .) "prod" | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" (include "chart.name" .) (.Values.suffix | default "prod") | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{- define "chart.labels" -}}
