@@ -156,6 +156,22 @@ spec:
           namespace: ustbite-backend
           port: 8010
 
+    # AI Agent endpoints → ai-agent-service
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/agent
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: ustbite-ai-agent-service-prod
+          namespace: ustbite-backend
+          port: 8009
+
 ---
 # ─── ArgoCD UI (admin access via gateway) ─────────────────────
 apiVersion: gateway.networking.k8s.io/v1

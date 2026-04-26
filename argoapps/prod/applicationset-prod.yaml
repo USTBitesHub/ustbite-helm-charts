@@ -40,6 +40,9 @@ spec:
           - service: cart-service
             namespace: ustbite-backend
             port: "8010"
+          - service: ai-agent-service
+            namespace: ustbite-backend
+            port: "8009"
 
   template:
     metadata:

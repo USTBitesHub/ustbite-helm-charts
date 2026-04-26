@@ -6,24 +6,24 @@ image:
 service:
   type: ClusterIP
   port: 8009
-namespace: ustbite-ops
+namespace: ustbite-backend
 env:
   SERVICE_NAME: ustbite-ai-agent-service
   SERVICE_PORT: "8009"
   LOG_LEVEL: "INFO"
-secrets:
-  DATABASE_URL: ""
-  REDIS_URL: ""
-  RABBITMQ_URL: ""
-  SECRET_KEY: ""
-  AI_API_KEY: ""
+  OLLAMA_MODEL: "qwen2.5:3b"
+  OLLAMA_HOST: "http://54.85.49.94:11434"
+  CART_SERVICE_URL: "http://ustbite-cart-service-prod:8010"
+  ORDER_SERVICE_URL: "http://ustbite-order-service-prod:8003"
+  RESTAURANT_SERVICE_URL: "http://ustbite-restaurant-service-prod:8002"
+secrets: {}
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 200m
+    memory: 256Mi
   limits:
     cpu: 500m
-    memory: 512Mi
+    memory: 256Mi
 autoscaling:
   enabled: false
   minReplicas: 2

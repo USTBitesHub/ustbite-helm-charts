@@ -28,6 +28,8 @@ spec:
             namespace: ustbite-backend
           - service: cart-service
             namespace: ustbite-backend
+          - service: ai-agent-service
+            namespace: ustbite-backend
 
   template:
     metadata:

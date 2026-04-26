@@ -7,6 +7,8 @@ data:
   SERVICE_NAME: {{ .Values.env.SERVICE_NAME }}
   SERVICE_PORT: {{ .Values.env.SERVICE_PORT | quote }}
   LOG_LEVEL: {{ .Values.env.LOG_LEVEL }}
-  DATABASE_HOST: ustbite-ai-agent-service-postgres.ustbite-ops.svc.cluster.local
-  DATABASE_PORT: "5432"
-  DATABASE_NAME: ustbite_incidents_db
+  OLLAMA_HOST: {{ .Values.env.OLLAMA_HOST }}
+  OLLAMA_MODEL: {{ .Values.env.OLLAMA_MODEL }}
+  CART_SERVICE_URL: {{ .Values.env.CART_SERVICE_URL }}
+  ORDER_SERVICE_URL: {{ .Values.env.ORDER_SERVICE_URL }}
+  RESTAURANT_SERVICE_URL: {{ .Values.env.RESTAURANT_SERVICE_URL }}
