@@ -13,8 +13,9 @@ env:
   SERVICE_PORT: "8010"
   LOG_LEVEL: "DEBUG"
   REDIS_TTL_SECONDS: "3600"
-  REDIS_URL: "redis://ustbite-redis.ustbite-data.svc.cluster.local:6379"
+  REDIS_URL: "redis://ustbite-redis-master.ustbite-data.svc.cluster.local:6379"
   JWT_SECRET: "ustbite-jwt-secret-dev-only"
+  DATABASE_URL: "postgresql+asyncpg://ustbite_user:dbpass@ustbite-cart-service-postgres.ustbite-data.svc.cluster.local:5432/ustbite_cart_db"
 secrets: {}
 resources:
   requests:
