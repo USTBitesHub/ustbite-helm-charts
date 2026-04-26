@@ -13,9 +13,9 @@ env:
   LOG_LEVEL: "INFO"
   OLLAMA_MODEL: "qwen2.5:3b"
   OLLAMA_HOST: "http://54.85.49.94:11434"
-  CART_SERVICE_URL: "http://ustbite-cart-service-prod:8010"
-  ORDER_SERVICE_URL: "http://ustbite-order-service-prod:8003"
-  RESTAURANT_SERVICE_URL: "http://ustbite-restaurant-service-prod:8002"
+  CART_SERVICE_URL: "http://cart-service-prod:8010"
+  ORDER_SERVICE_URL: "http://order-service-prod:8003"
+  RESTAURANT_SERVICE_URL: "http://restaurant-service-prod:8002"
 secrets: {}
 resources:
   requests:
