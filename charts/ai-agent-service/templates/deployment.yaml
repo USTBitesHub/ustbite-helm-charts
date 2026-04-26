@@ -26,8 +26,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "chart.fullname" . }}-config
+            {{- if .Values.secrets }}
             - secretRef:
                 name: {{ include "chart.fullname" . }}-secret
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
