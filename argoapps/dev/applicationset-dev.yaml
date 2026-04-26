@@ -37,13 +37,13 @@ spec:
       namespace: argocd
     spec:
       project: default
-      sources:
-        - repoURL: https://github.com/USTBitesHub/ustbite-helm-charts.git
-          targetRevision: develop
-          path: "charts/{{service}}"
-          helm:
-            valueFiles:
-              - values.dev.yaml
+      source:
+        repoURL: https://github.com/USTBitesHub/ustbite-helm-charts.git
+        targetRevision: develop
+        path: "charts/{{service}}"
+        helm:
+          valueFiles:
+            - values.dev.yaml
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{namespace}}"
