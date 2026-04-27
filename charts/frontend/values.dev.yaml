@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: ustbiteshub/ustbite-frontend
+  repository: ghcr.io/ustbiteshub/ustbite-frontend
   pullPolicy: IfNotPresent
   tag: develop-8d9037e4
 service:
