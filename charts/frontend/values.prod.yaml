@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-frontend
   pullPolicy: IfNotPresent
-  tag: frontend-v0.5.0
+  tag: frontend-v0.5.1
 service:
   type: ClusterIP
   port: 8080
