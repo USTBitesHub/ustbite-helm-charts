@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/ustbiteshub/ustbite-frontend
   pullPolicy: IfNotPresent
-  tag: develop-8d9037e4
+  tag: develop-ea62a262
 service:
   type: ClusterIP
   port: 8080
