@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/ustbiteshub/ustbite-log-aggregator
   pullPolicy: IfNotPresent
-  tag: develop-44fd65a6
+  tag: develop-e82e2b1d
 service:
   type: ClusterIP
   port: 8008
