@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: ustbiteshub/ustbite-log-aggregator
+  repository: ghcr.io/ustbiteshub/ustbite-log-aggregator
   pullPolicy: IfNotPresent
   tag: develop-44fd65a6
 service:

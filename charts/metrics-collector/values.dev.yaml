@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: ustbiteshub/ustbite-metrics-collector
+  repository: ghcr.io/ustbiteshub/ustbite-metrics-collector
   pullPolicy: IfNotPresent
   tag: develop-85273d6b
 service:

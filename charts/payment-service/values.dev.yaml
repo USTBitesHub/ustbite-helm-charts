@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: ustbiteshub/ustbite-payment-service
+  repository: ghcr.io/ustbiteshub/ustbite-payment-service
   pullPolicy: IfNotPresent
   tag: develop-9d4a971b
 service:

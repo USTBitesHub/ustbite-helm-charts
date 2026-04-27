@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: ustbiteshub/ustbite-ai-agent-service
+  repository: ghcr.io/ustbiteshub/ustbite-ai-agent-service
   pullPolicy: IfNotPresent
   tag: develop-e0d1ffd7
 service:

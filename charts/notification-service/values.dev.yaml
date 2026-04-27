@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: ustbiteshub/ustbite-notification-service
+  repository: ghcr.io/ustbiteshub/ustbite-notification-service
   pullPolicy: IfNotPresent
   tag: develop-598566cc
 service:

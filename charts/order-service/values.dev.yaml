@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: ustbiteshub/ustbite-order-service
+  repository: ghcr.io/ustbiteshub/ustbite-order-service
   pullPolicy: IfNotPresent
   tag: develop-7483bc51
 service:

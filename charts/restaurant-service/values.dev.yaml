@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: ustbiteshub/ustbite-restaurant-service
+  repository: ghcr.io/ustbiteshub/ustbite-restaurant-service
   pullPolicy: IfNotPresent
   tag: develop-58157f08
 service:

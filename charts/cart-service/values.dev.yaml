@@ -1,7 +1,7 @@
 suffix: dev
 replicaCount: 1
 image:
-  repository: ustbiteshub/ustbite-cart-service
+  repository: ghcr.io/ustbiteshub/ustbite-cart-service
   pullPolicy: Always
   tag: latest
 service:
