@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-cart-service
   pullPolicy: IfNotPresent
-  tag: cart-service-v0.0.4
+  tag: cart-service-v0.0.5
 service:
   type: ClusterIP
   port: 8010
