@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/ustbiteshub/ustbite-cart-service
   pullPolicy: Always
-  tag: develop-1cb7a67f
+  tag: develop-7478fdbc
 service:
   type: ClusterIP
   port: 8010
