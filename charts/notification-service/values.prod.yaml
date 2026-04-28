@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ustbiteshub/ustbite-notification-service
   pullPolicy: IfNotPresent
-  tag: notification-service-v0.0.4
+  tag: notification-service-v0.0.5
 service:
   type: ClusterIP
   port: 8006
