@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/ustbiteshub/ustbite-payment-service
   pullPolicy: IfNotPresent
-  tag: develop-bcb343c2
+  tag: develop-0109abc0
 service:
   type: ClusterIP
   port: 8004
