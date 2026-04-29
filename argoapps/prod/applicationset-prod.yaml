@@ -1,9 +1,4 @@
-# ============================================================
-# PRODUCTION ApplicationSet
-# Watches ustbite-helm-charts@main and deploys each service
-# chart using values.prod.yaml overlay.
-# Applies to: ustbite-frontend, ustbite-backend, ustbite-ops
-# ============================================================
+
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -13,12 +8,11 @@ spec:
   generators:
     - list:
         elements:
-          # ─── Frontend ───────────────────────────────────────
+      
           - service: frontend
             namespace: ustbite-frontend
             port: "80"
 
-          # ─── Backend ────────────────────────────────────────
           - service: user-service
             namespace: ustbite-backend
             port: "8001"
