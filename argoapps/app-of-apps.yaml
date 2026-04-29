@@ -1,16 +1,11 @@
-# ============================================================
-# App-of-Apps Root Application
-# Point ArgoCD at this file first. It watches the argoapps/
-# folder and bootstraps all ApplicationSets automatically.
-# kubectl apply -f argoapps/app-of-apps.yaml -n argocd
-# ============================================================
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ustbite-app-of-apps
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-10"   # sync this first before all others
+    argocd.argoproj.io/sync-wave: "-10"   
 spec:
   project: default
   source:
